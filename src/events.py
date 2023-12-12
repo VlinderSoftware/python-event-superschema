@@ -1,5 +1,6 @@
 from jsonschema import validators
 from uuid import uuid4 as uuid
+from typing import Callable, Dict
 
 Validator = validators.Draft202012Validator
 
@@ -41,13 +42,15 @@ def get_event_dispatcher(err: Callable[[Dict[str, str]], None], handlers: Dict[s
     return dispatch
 
 def _get_format_event_function(data_preprocessors=None):
-    if not data_preprocessors:
+    if data_preprocessors is None:
         data_preprocessors = { '__default__': lambda a : a }
+    elif data_preprocessors['__default__'] is None:
+        data_preprocessors['__default__'] = lambda a : a
+    else:
+        pass
     def format_event(type, cid=None, id=None, pid=None, tid=None, uid=None, token=None, data=None):
         if data:
-            if (not type in data_preprocessors or not data_preprocessors[type]) and (not '__default__' in data_preprocessors or not data_preprocessors['__default__']):
-                raise Exception(f'No data formatter for type {type}, and data was provided')
-            elif not type in data_preprocessors or not data_preprocessors[type]:
+            if not type in data_preprocessors or not data_preprocessors[type]:
                 formatted_data = data_preprocessors['__default__'](data)
             else:
                 formatted_data = data_preprocessors[type](data)
