@@ -25,6 +25,11 @@ dev = [
 #    "pytest-bdd",
     "pytest-cov",
 ]
+ci = [
+    "sphinx",
+    "sphinx-markdown-builder",
+    "sphinx-autodoc-typehints",
+]
 
 [tool.pytest.ini_options]
 addopts = [
