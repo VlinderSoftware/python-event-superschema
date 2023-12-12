@@ -1,3 +1,6 @@
+'''
+Support for a generic super-schema for event handling.
+'''
 from jsonschema import validators
 from uuid import uuid4 as uuid
 from typing import Callable, Dict
