@@ -25,8 +25,8 @@ _super_schema = {
 }
 _super_schema_validator = Validator(_super_schema)
 
-def get_event_dispatcher(err, handlers):
-    def dispatch(event):
+def get_event_dispatcher(err: Callable[[Dict[str, str]], None], handlers: Dict[str, Callable[[dict], None]]) -> Callable[[dict], None]:
+    def dispatch(event: dict) -> None:
         is_valid = _super_schema_validator.is_valid(event)
         if not is_valid:
             err({ 'error': 'SchemaMismatchError', 'message': 'Event does not match event schema' })
