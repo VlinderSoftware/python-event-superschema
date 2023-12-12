@@ -1,7 +1,7 @@
 '''Test event dispatching'''
 from uuid import uuid4 as uuid
 from jsonschema import validators
-from src import get_event_dispatcher
+from event_superschema import get_event_dispatcher
 
 Validator = validators.Draft202012Validator
 

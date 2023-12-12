@@ -37,7 +37,7 @@ addopts = [
 ]
 pythonpath = [
     ".",
-    "src",
+    "event_superschema",
 ]
 
 [tool.hatch.build.targets.wheel]
