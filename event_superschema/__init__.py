@@ -1,11 +1,11 @@
 '''
 Support for a generic super-schema for event handling.
 '''
-from jsonschema import validators
 from uuid import uuid4 as uuid
 from typing import Callable, Dict
+from jsonschema import validators
 
-Validator = validators.Draft202012Validator
+_Validator = validators.Draft202012Validator
 
 _super_schema = {
     "type": "object",
@@ -27,9 +27,24 @@ _super_schema = {
     },
     "required": [ "id", "type", "metadata" ]
 }
-_super_schema_validator = Validator(_super_schema)
+_super_schema_validator = _Validator(_super_schema)
 
-def get_event_dispatcher(err: Callable[[Dict[str, str]], None], handlers: Dict[str, Callable[[dict], None]]) -> Callable[[dict], None]:
+def get_event_dispatcher(
+        err: Callable[[Dict[str, str]], None],
+        handlers: Dict[str, Callable[[dict], None]]
+        ) -> Callable[[dict], None]:
+    '''Get an event dispatcher
+
+    :param err: error handler. Receives an error message that, if it comes from this module, will
+                contain at least an 'error' and a 'message' field
+    :param handlers: Handlers for the event. For each event type to handle, it should have a
+                     function that takes the event as an argument. Only one handler per event
+                     is permitted. Exceptions are not caught. If no specific handler is
+                     available and a '__default__' handler is included in the handlers, that
+                     handler will be called by the dispatcher.
+    :returns: a dispatcher that will validate incoming events against the super-schema and call the
+              appropriate event handler if one is available.
+    '''
     def dispatch(event: dict) -> None:
         is_valid = _super_schema_validator.is_valid(event)
         if not is_valid:
@@ -51,15 +66,24 @@ def _get_format_event_function(data_preprocessors=None):
         data_preprocessors['__default__'] = lambda a : a
     else:
         pass
-    def format_event(type, cid=None, id=None, pid=None, tid=None, uid=None, token=None, data=None):
+    def format_event(
+            event_type,
+            cid=None,
+            event_id=None,
+            pid=None,
+            tid=None,
+            uid=None,
+            token=None,
+            data=None
+            ):
         if data:
-            if not type in data_preprocessors or not data_preprocessors[type]:
+            if not event_type in data_preprocessors or not data_preprocessors[event_type]:
                 formatted_data = data_preprocessors['__default__'](data)
             else:
-                formatted_data = data_preprocessors[type](data)
+                formatted_data = data_preprocessors[event_type](data)
         else:
             formatted_data = None
-        event_id = id if id else str(uuid())
+        event_id = event_id if event_id else str(uuid())
         metadata = {}
         metadata['cid'] = cid if cid else event_id
         metadata['tid'] = tid if tid else event_id
@@ -69,23 +93,39 @@ def _get_format_event_function(data_preprocessors=None):
             metadata['token'] = token
         if pid:
             metadata['pid'] = pid
-        
+
         formatted_event = {
             'id': event_id,
-            'type': type,
+            'type': event_type,
             'metadata': metadata
         }
         if formatted_data:
             formatted_event['data'] = formatted_data
-        
+
         return formatted_event
     return format_event
 
-def get_send_event_function(send, data_preprocessors=None, pid=None):
+def get_send_event_function(
+    send: Callable[[Dict[str, str]], None],
+    data_preprocessors: Dict[str, Callable[[dict], None]]=None,
+    pid: str=None):
+    '''Get a function to send properly formatted events
+    
+    :param send: a generic function to send events on the event bus, once they're properly
+                 formatted. Should expect a dict and not return anything.
+    :param data_preprocessors:
+    '''
     if not data_preprocessors:
         data_preprocessors = { '__default__': lambda a : a }
     format_event = _get_format_event_function(data_preprocessors)
     def send_event(event_type, event_data=None, cid=None, uid=None, token=None):
-        formatted_event = format_event(type=event_type, cid=cid, pid=pid, uid=uid, token=token, data=event_data)
+        formatted_event = format_event(
+            event_type=event_type,
+            cid=cid,
+            pid=pid,
+            uid=uid,
+            token=token,
+            data=event_data
+            )
         send(formatted_event)
     return send_event
