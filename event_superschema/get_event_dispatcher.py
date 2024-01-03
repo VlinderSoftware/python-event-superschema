@@ -1,6 +1,6 @@
 from typing import Callable, Dict
 
-from .super_schema import _super_schema_validator
+from ._super_schema import _super_schema_validator
 
 def get_event_dispatcher(
         err: Callable[[Dict[str, str]], None],

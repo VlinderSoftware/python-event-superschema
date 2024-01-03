@@ -19,7 +19,7 @@ def _get_format_event_function(
             uid:Optional[str]=None,
             token:Optional[str]=None,
             data:Optional[str]=None
-            ):dict:
+            ) -> dict:
         if data:
             if not event_type in data_preprocessors or not data_preprocessors[event_type]:
                 formatted_data = data_preprocessors['__default__'](data)
