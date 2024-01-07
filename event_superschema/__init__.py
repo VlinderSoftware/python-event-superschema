@@ -2,32 +2,9 @@
 Support for a generic super-schema for event handling.
 '''
 from uuid import uuid4 as uuid
-from typing import Callable, Dict
-from jsonschema import validators
+from typing import Callable, Dict, Optional
 
-_Validator = validators.Draft202012Validator
-
-_super_schema = {
-    "type": "object",
-    "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "type": { "type": "string" },
-        "metadata": {
-            "type": "object",
-            "properties": {
-                "cid": { "type": "string", "format": "uuid" },
-                "tid": { "type": "string", "format": "uuid" },
-                "pid": { "type": "string", "format": "uuid" },
-                "user": { "type": "string", "format": "uuid" },
-                "token": { "type": "string" }
-            },
-            "required": [ "cid" ]
-        },
-        "data": { "type": "object" }
-    },
-    "required": [ "id", "type", "metadata" ]
-}
-_super_schema_validator = _Validator(_super_schema)
+from .super_schema import _super_schema_validator
 
 def get_event_dispatcher(
         err: Callable[[Dict[str, str]], None],
@@ -59,7 +36,9 @@ def get_event_dispatcher(
             handlers['__default__'](err, event)
     return dispatch
 
-def _get_format_event_function(data_preprocessors=None):
+def _get_format_event_function(
+    data_preprocessors:Dict[str, Callable[[any],dict]]=None) -> Callable[
+    [str, Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str]],dict]:
     if data_preprocessors is None:
         data_preprocessors = { '__default__': lambda a : a }
     elif data_preprocessors['__default__'] is None:
@@ -67,15 +46,15 @@ def _get_format_event_function(data_preprocessors=None):
     else:
         pass
     def format_event(
-            event_type,
-            cid=None,
-            event_id=None,
-            pid=None,
-            tid=None,
-            uid=None,
-            token=None,
-            data=None
-            ):
+            event_type:str,
+            cid:Optional[str]=None,
+            event_id:Optional[str]=None,
+            pid:Optional[str]=None,
+            tid:Optional[str]=None,
+            uid:Optional[str]=None,
+            token:Optional[str]=None,
+            data:Optional[str]=None
+            ):dict:
         if data:
             if not event_type in data_preprocessors or not data_preprocessors[event_type]:
                 formatted_data = data_preprocessors['__default__'](data)
@@ -106,19 +85,21 @@ def _get_format_event_function(data_preprocessors=None):
     return format_event
 
 def get_send_event_function(
-    send: Callable[[Dict[str, str]], None],
-    data_preprocessors: Dict[str, Callable[[dict], None]]=None,
-    pid: str=None):
+    send:Callable[[dict], None],
+    data_preprocessors:Optional[Dict[str, Callable[[dict], None]]]=None,
+    pid:Optional[str]=None) -> Callable[[
+    str,Optional[any],Optional[str],Optional[str],Optional[str]],None]:
     '''Get a function to send properly formatted events
     
     :param send: a generic function to send events on the event bus, once they're properly
                  formatted. Should expect a dict and not return anything.
-    :param data_preprocessors:
+    :param data_preprocessors: optional dict mapping event types to their data preprocessors. The data preprocessor should convert the event data to a serializable dict conforming to the appropriate schema
+    :param pid: optional producer ID
     '''
     if not data_preprocessors:
         data_preprocessors = { '__default__': lambda a : a }
     format_event = _get_format_event_function(data_preprocessors)
-    def send_event(event_type, event_data=None, cid=None, uid=None, token=None):
+    def send_event(event_type:str, event_data:Optional[any]=None, cid:Optional[str]=None, uid:Optional[str]=None, token:Optional[str]=None) -> None:
         formatted_event = format_event(
             event_type=event_type,
             cid=cid,
