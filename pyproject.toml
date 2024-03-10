@@ -30,6 +30,9 @@ ci = [
     "sphinx-markdown-builder",
     "sphinx-autodoc-typehints",
 ]
+paper = [
+    "kafka-python"
+]
 
 [tool.pytest.ini_options]
 addopts = [
