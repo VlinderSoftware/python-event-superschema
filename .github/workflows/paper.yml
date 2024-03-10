@@ -1,7 +1,7 @@
 name: Build the paper
 on:
     push: {}
-    workflow_dispatches: {}
+    workflow_dispatch: {}
 
 jobs:
     build-paper:
