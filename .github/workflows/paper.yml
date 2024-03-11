@@ -13,3 +13,6 @@ jobs:
           with:
             filename: guidelines.ipynb
             requirements-txt: paper-requirements.txt
+            attachments:
+            - diagram.png
+            - pyproject.toml # to test the pipeline
