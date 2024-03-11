@@ -12,3 +12,4 @@ jobs:
         - uses: blytkerchan/build-paper@main
           with:
             filename: guidelines.ipynb
+            requirements-txt: paper-requirements.txt
