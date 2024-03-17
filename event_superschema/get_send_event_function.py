@@ -51,15 +51,15 @@ def _get_format_event_function(
 
 def get_send_event_function(
     send:Callable[[dict], None],
-    data_preprocessors:Optional[Dict[str, Callable[[dict], None]]]=None,
-    pid:Optional[str]=None) -> Callable[[
+    pid:str,
+    data_preprocessors:Optional[Dict[str, Callable[[dict], None]]]=None) -> Callable[[
     str,Optional[any],Optional[str],Optional[str],Optional[str]],None]:
     '''Get a function to send properly formatted events
     
     :param send: a generic function to send events on the event bus, once they're properly
                  formatted. Should expect a dict and not return anything.
+    :param pid: producer ID
     :param data_preprocessors: optional dict mapping event types to their data preprocessors. The data preprocessor should convert the event data to a serializable dict conforming to the appropriate schema
-    :param pid: optional producer ID
     '''
     if not data_preprocessors:
         data_preprocessors = { '__default__': lambda a : a }
