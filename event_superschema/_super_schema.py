@@ -13,10 +13,10 @@ _super_schema = {
                 "cid": { "type": "string", "format": "uuid" },
                 "tid": { "type": "string", "format": "uuid" },
                 "pid": { "type": "string", "format": "uuid" },
-                "user": { "type": "string", "format": "uuid" },
+                "uid": { "type": "string", "format": "uuid" },
                 "token": { "type": "string" }
             },
-            "required": [ "cid" ]
+            "required": [ "cid", "pid" ]
         },
         "data": { "type": "object" }
     },
