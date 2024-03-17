@@ -55,7 +55,7 @@ def get_send_event_function(
     data_preprocessors:Optional[Dict[str, Callable[[dict], None]]]=None) -> Callable[[
     str,Optional[any],Optional[str],Optional[str],Optional[str]],None]:
     '''Get a function to send properly formatted events
-    
+
     :param send: a generic function to send events on the event bus, once they're properly
                  formatted. Should expect a dict and not return anything.
     :param pid: producer ID

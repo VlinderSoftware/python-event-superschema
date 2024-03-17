@@ -74,6 +74,6 @@ for filename in os.listdir(folder):
 
 with open(OUTPUT_FILENAME, 'w') as fh:
     fh.write(markdown)
-    
+
 # ## Removing Sphynx folder
 shutil.rmtree('Sphinx-docs')

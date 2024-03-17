@@ -1,4 +1,4 @@
-from events import get_event_dispatcher
+from event_superschema import get_event_dispatcher
 import json
 from kafka import KafkaConsumer
 import logging
@@ -15,7 +15,7 @@ def on_purchase_order_event(err, event):
     if not is_valid:
         err({ 'error': 'SchemaMismatchError', 'message': 'Event data does not match event schema' })
         return
-    # do something useful with the event 
+    # do something useful with the event
     logging.warning(f'Received a purchase order event {event["id"]}')
 
 consumer = KafkaConsumer('purchase-orders', group_id='services-order')

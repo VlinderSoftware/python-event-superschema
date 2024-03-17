@@ -88,7 +88,7 @@ def test_dispatcher_calls_default_handler():
 def test_dispatcher_calls_named_handler():
     '''
     Validate that a valid event is passed to the named handler if one
-    is available, and is not passed to the default handler in that 
+    is available, and is not passed to the default handler in that
     case
     '''
     minimal_event = {
