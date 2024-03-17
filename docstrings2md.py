@@ -1,3 +1,4 @@
+# pylint: skip-file
 # for details see https://stackoverflow.com/questions/36237477/python-docstrings-to-github-readme-md
 # further details in https://blog.matteoferla.com/2019/11/convert-python-docstrings-to-github.html
 

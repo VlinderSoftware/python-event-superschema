@@ -1,3 +1,4 @@
+'''Validator for the super-schema'''
 from jsonschema import validators
 
 _Validator = validators.Draft202012Validator

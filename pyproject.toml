@@ -21,6 +21,8 @@ Issues = "https://github.com/VlinderSoftware/python-event-superschema/issues"
 
 [project.optional-dependencies]
 dev = [
+    "pre-commit",
+    "pylint",
     "pytest",
 #    "pytest-bdd",
     "pytest-cov",
@@ -42,5 +44,4 @@ pythonpath = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
-
+packages = ["event_superschema"]

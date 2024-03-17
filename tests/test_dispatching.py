@@ -6,10 +6,10 @@ from event_superschema import get_event_dispatcher
 Validator = validators.Draft202012Validator
 
 _error_schema = {
-    "type": "object",
-    "properties": {
-        "error": { "type": "string", "pattern": "^[A-Z][A-Za-z]*$" },
-        "message": { "type": "string" },
+    'type': 'object',
+    'properties': {
+        'error': { 'type': 'string', 'pattern': '^[A-Z][A-Za-z]*$' },
+        'message': { 'type': 'string' },
     }
 }
 _error_schema_validator = Validator(_error_schema)
@@ -29,7 +29,7 @@ def test_dispatcher_validates_against_schema_expect_fail_missing_everything():
         err_called = True
     dispatcher = get_event_dispatcher(err=err, handlers={})
     dispatcher({})
-    assert(err_called)
+    assert err_called
 
 def test_dispatcher_validates_against_schema_expect_pass():
     '''
@@ -106,6 +106,7 @@ def test_dispatcher_calls_named_handler():
         err_called = True
 
     default_handler_called = False
+    # pylint: disable=invalid-name
     def default_handler(_, __):
         nonlocal default_handler_called
         default_handler_called = True
@@ -146,6 +147,7 @@ def test_dispatcher_calls_named_base_handler():
         err_called = True
 
     default_handler_called = False
+    # pylint: disable=invalid-name
     def default_handler(_, __):
         nonlocal default_handler_called
         default_handler_called = True
@@ -186,11 +188,13 @@ def test_dispatcher_calls_exact_named_handler():
         err_called = True
 
     default_handler_called = False
+    # pylint: disable=invalid-name
     def default_handler(_, __):
         nonlocal default_handler_called
         default_handler_called = True
 
     named_handler_called = False
+    # pylint: disable=invalid-name
     def named_handler(_, __):
         nonlocal named_handler_called
         named_handler_called = True

@@ -1,3 +1,7 @@
+'''
+Get the send_event function, which formats the event and sends it to the bus, taking care of
+most of the boilerplate
+'''
 from uuid import uuid4 as uuid
 from typing import Callable, Dict, Optional
 
@@ -20,6 +24,7 @@ def _get_format_event_function(
         data_preprocessors['__default__'] = lambda a : a
     else:
         pass
+    # pylint: disable=locally-disabled, too-many-arguments
     def format_event(
             event_type:str,
             cid:Optional[str]=None,
@@ -69,12 +74,20 @@ def get_send_event_function(
     :param send: a generic function to send events on the event bus, once they're properly
                  formatted. Should expect a dict and not return anything.
     :param pid: producer ID
-    :param data_preprocessors: optional dict mapping event types to their data preprocessors. The data preprocessor should convert the event data to a serializable dict conforming to the appropriate schema
+    :param data_preprocessors: optional dict mapping event types to their data preprocessors.
+        The data preprocessor should convert the event data to a serializable dict conforming
+        to the appropriate schema
     '''
     if not data_preprocessors:
         data_preprocessors = { '__default__': lambda a : a }
     format_event = _get_format_event_function(data_preprocessors)
-    def send_event(event_type:str, event_data:Optional[any]=None, cid:Optional[str]=None, uid:Optional[str]=None, token:Optional[str]=None) -> None:
+    def send_event(
+            event_type:str,
+            event_data:Optional[any]=None,
+            cid:Optional[str]=None,
+            uid:Optional[str]=None,
+            token:Optional[str]=None,
+        ) -> None:
         formatted_event = format_event(
             event_type=event_type,
             cid=cid,

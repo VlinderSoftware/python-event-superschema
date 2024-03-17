@@ -1,4 +1,5 @@
-from events import get_send_event_function
+'''Example code for transmitting events'''
+from event_superschema import get_send_event_function
 import json
 from kafka import KafkaProducer
 from purchase_order import PurchaseOrder
@@ -9,16 +10,22 @@ def get_send_to_kafka_function(producer, topic):
         producer.send(topic, json.dumps(event).encode())
     return send_to_kafka
 
-producer = KafkaProducer()
+if __name__ == '__main__':
+    kafka_producer = KafkaProducer()
+    pid = str(uuid())
 
-send_event = get_send_event_function(get_send_to_kafka_function(producer, 'purchase-orders'), data_preprocessors={
-    'PurchaseRequested': lambda a : a.serialize()
-})
+    send_event = get_send_event_function(
+        get_send_to_kafka_function(kafka_producer, 'purchase-orders'),
+        pid=pid,
+        data_preprocessors={
+            'PurchaseRequested': lambda a : a.serialize()
+        }
+    )
 
-po = PurchaseOrder()
-po.add_item('MAGNOLIA', 2)
-po.add_item('RED_ROSE', 5)
+    po = PurchaseOrder()
+    po.add_item('MAGNOLIA', 2)
+    po.add_item('RED_ROSE', 5)
 
-send_event('PurchaseRequested', po, uid=str(uuid()))
+    send_event('PurchaseRequested', po, uid=str(uuid()))
 
-producer.flush()
+    kafka_producer.flush()
