@@ -9,8 +9,9 @@ jobs:
         steps:
         - name: Checkout
           uses: actions/checkout@v4.1.1
-        - uses: blytkerchan/build-paper@v1
+        - uses: blytkerchan/build-paper@topic/optional-pdf
           with:
             filename: guidelines.ipynb
             requirements-txt: paper-requirements.txt
             attachments: diagram.png
+            build-pdf: false
