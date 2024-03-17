@@ -47,6 +47,7 @@ def test_dispatcher_validates_against_schema_expect_pass():
         'id': str(uuid()),
         'metadata': {
             'cid': str(uuid()),
+            'pid': str(uuid()),
         }
     }
     dispatcher(minimal_event)
@@ -62,6 +63,7 @@ def test_dispatcher_calls_default_handler():
         'id': str(uuid()),
         'metadata': {
             'cid': str(uuid()),
+            'pid': str(uuid()),
         }
     }
 
@@ -94,6 +96,7 @@ def test_dispatcher_calls_named_handler():
         'id': str(uuid()),
         'metadata': {
             'cid': str(uuid()),
+            'pid': str(uuid()),
         }
     }
 
@@ -133,6 +136,7 @@ def test_dispatcher_calls_named_base_handler():
         'id': str(uuid()),
         'metadata': {
             'cid': str(uuid()),
+            'pid': str(uuid()),
         }
     }
 
@@ -172,6 +176,7 @@ def test_dispatcher_calls_exact_named_handler():
         'id': str(uuid()),
         'metadata': {
             'cid': str(uuid()),
+            'pid': str(uuid()),
         }
     }
 
