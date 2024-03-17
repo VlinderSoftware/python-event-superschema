@@ -3,7 +3,17 @@ from typing import Callable, Dict, Optional
 
 def _get_format_event_function(
     data_preprocessors:Dict[str, Callable[[any],dict]]=None) -> Callable[
-    [str, Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str]],dict]:
+        [str,
+         Optional[str],
+         Optional[str],
+         Optional[str],
+         Optional[str],
+         Optional[str],
+         Optional[str],
+         Optional[str]
+        ],
+        dict
+    ]:
     if data_preprocessors is None:
         data_preprocessors = { '__default__': lambda a : a }
     elif data_preprocessors['__default__'] is None:
