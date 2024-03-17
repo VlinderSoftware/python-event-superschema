@@ -6,9 +6,10 @@ from uuid import uuid4 as uuid
 from typing import Callable, Dict, Optional
 
 def _get_format_event_function(
-    data_preprocessors:Dict[str, Callable[[any],dict]]=None) -> Callable[
+    data_preprocessors:Dict[str, Callable[[any],dict]]=None,
+    pid:Optional[str]=None
+    ) -> Callable[
         [str,
-         Optional[str],
          Optional[str],
          Optional[str],
          Optional[str],
@@ -18,9 +19,11 @@ def _get_format_event_function(
         ],
         dict
     ]:
+    if pid is None:
+        pid = str(uuid())
     if data_preprocessors is None:
         data_preprocessors = { '__default__': lambda a : a }
-    elif data_preprocessors['__default__'] is None:
+    elif '__default__' not in data_preprocessors or data_preprocessors['__default__'] is None:
         data_preprocessors['__default__'] = lambda a : a
     else:
         pass
@@ -29,13 +32,12 @@ def _get_format_event_function(
             event_type:str,
             cid:Optional[str]=None,
             event_id:Optional[str]=None,
-            pid:Optional[str]=None,
             tid:Optional[str]=None,
             uid:Optional[str]=None,
             token:Optional[str]=None,
             data:Optional[str]=None
             ) -> dict:
-        if data:
+        if data is not None:
             if not event_type in data_preprocessors or not data_preprocessors[event_type]:
                 formatted_data = data_preprocessors['__default__'](data)
             else:
@@ -58,7 +60,7 @@ def _get_format_event_function(
             'type': event_type,
             'metadata': metadata
         }
-        if formatted_data:
+        if formatted_data is not None:
             formatted_event['data'] = formatted_data
 
         return formatted_event
@@ -80,7 +82,7 @@ def get_send_event_function(
     '''
     if not data_preprocessors:
         data_preprocessors = { '__default__': lambda a : a }
-    format_event = _get_format_event_function(data_preprocessors)
+    format_event = _get_format_event_function(data_preprocessors=data_preprocessors, pid=pid)
     def send_event(
             event_type:str,
             event_data:Optional[any]=None,
@@ -91,7 +93,6 @@ def get_send_event_function(
         formatted_event = format_event(
             event_type=event_type,
             cid=cid,
-            pid=pid,
             uid=uid,
             token=token,
             data=event_data
