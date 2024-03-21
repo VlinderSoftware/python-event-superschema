@@ -1,6 +1,6 @@
 from jose import jwe
 import json
-from typing import Callable, Dict
+from typing import Callable, Dict, Optional
 
 from .get_send_event_function import get_send_event_function
 
@@ -8,7 +8,7 @@ def get_jwe_send_event_function(
     send:Callable[[str], None],
     pid:str,
     data_preprocessors:Optional[Dict[str, Callable[[dict], None]]]=None,
-    key:str
+    key:str=None,
     algorithm:str='dir',
     encryption:str='A256GCM'
     ) -> Callable[[

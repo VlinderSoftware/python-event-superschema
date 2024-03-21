@@ -14,3 +14,4 @@ def get_jws_event_dispatcher(
     def _dispatch(signed_event: str):
         decoded_event = json.loads(jws.verify(signed_event, key, algorithm))
         inner_dispatcher(decoded_event)
+    return _dispatch
