@@ -11,6 +11,9 @@ def get_jwe_event_dispatcher(
     ) -> Callable[[dict], None]:
     inner_dispatcher = get_event_dispatcher(err, handlers)
     def _dispatch(encrypt_event: str):
-        decrypted_event = json.loads(jwe.decrypt(encrypt_event, key))
-        inner_dispatcher(decrypted_event)
+        try:
+            decrypted_event = json.loads(jwe.decrypt(encrypt_event, key))
+            inner_dispatcher(decrypted_event)
+        except TypeError:
+            err({"error":"InternalError", "message": "TypeError while parsing the event -- unencrypted event?"})
     return _dispatch
