@@ -4,7 +4,7 @@ from typing import Callable, Dict
 
 from .get_event_dispatcher import get_event_dispatcher
 
-def get_jws_event_dispatcher(
+def get_jwe_event_dispatcher(
     err: Callable[[Dict[str, str]], None],
     handlers: Dict[str, Callable[[dict], None]],
     key: str,

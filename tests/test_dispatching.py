@@ -1,18 +1,8 @@
 '''Test event dispatching'''
 from uuid import uuid4 as uuid
-from jsonschema import validators
 from event_superschema import get_event_dispatcher
 
-Validator = validators.Draft202012Validator
-
-_error_schema = {
-    'type': 'object',
-    'properties': {
-        'error': { 'type': 'string', 'pattern': '^[A-Z][A-Za-z]*$' },
-        'message': { 'type': 'string' },
-    }
-}
-_error_schema_validator = Validator(_error_schema)
+from tests._error_schema_validator import _error_schema_validator
 
 def test_get_event_dispatcher():
     '''Get a minimal event dispatcher'''

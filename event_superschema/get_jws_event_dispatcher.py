@@ -9,9 +9,12 @@ def get_jws_event_dispatcher(
     handlers: Dict[str, Callable[[dict], None]],
     key: str,
     algorithm: str
-    ) -> Callable[[dict], None]:
+    ) -> Callable[[str], None]:
     inner_dispatcher = get_event_dispatcher(err, handlers)
     def _dispatch(signed_event: str):
-        decoded_event = json.loads(jws.verify(signed_event, key, algorithm))
-        inner_dispatcher(decoded_event)
+        try:
+            decoded_event = json.loads(jws.verify(signed_event, key, algorithm))
+            inner_dispatcher(decoded_event)
+        except AttributeError:
+            err({"error":"InternalError", "message": "AttributeError while parsing the event -- unsigned event?"})
     return _dispatch
