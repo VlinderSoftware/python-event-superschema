@@ -24,8 +24,8 @@ dev = [
     "pre-commit",
     "pylint",
     "pytest",
-#    "pytest-bdd",
     "pytest-cov",
+    "python-jose[cryptography]",
 ]
 ci = [
     "sphinx",
