@@ -95,4 +95,3 @@ def test_try_dispatch_correctly_signed_event_A256GCM():
         exception_caught = True
     assert not exception_caught
     assert handler_called
-    
