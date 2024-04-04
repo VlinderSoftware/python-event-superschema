@@ -1,3 +1,5 @@
+See [here](https://vlindersoftware.github.io/python-event-superschema/) for user documentation
+
 To set up, start with
 ```
 . bootstrap
