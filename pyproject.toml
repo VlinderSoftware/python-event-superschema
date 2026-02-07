@@ -26,6 +26,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "python-jose[cryptography]",
+    "behave",
 ]
 ci = [
     "sphinx",
