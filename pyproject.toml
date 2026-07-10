@@ -12,7 +12,8 @@ description = "Event super-schema and supporting functions"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "jsonschema"
+    "jsonschema",
+    "python-jose[cryptography]"
 ]
 
 [projects.urls]
@@ -25,7 +26,6 @@ dev = [
     "pylint",
     "pytest",
     "pytest-cov",
-    "python-jose[cryptography]",
     "behave",
 ]
 ci = [
